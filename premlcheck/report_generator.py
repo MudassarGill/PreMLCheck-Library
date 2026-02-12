@@ -1,0 +1,188 @@
+"""
+Module 7: Report Generation
+Generates comprehensive analysis reports in multiple formats
+"""
+import json
+from typing import Any
+from datetime import datetime
+
+
+class ReportGenerator:
+    """
+    Generates analysis reports in various formats
+    """
+    
+    def generate(self, results: Any, output_path: str, format: str = 'markdown'):
+        """
+        Generate analysis report
+        
+        Args:
+            results: AnalysisResults object
+            output_path: Path to save report
+            format: 'markdown', 'html', or 'json'
+        """
+        if format == 'markdown':
+            content = self._generate_markdown(results)
+        elif format == 'html':
+            content = self._generate_html(results)
+        elif format == 'json':
+            content = self._generate_json(results)
+        else:
+            raise ValueError(f"Unsupported format: {format}. Use 'markdown', 'html', or 'json'.")
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+    
+    def _generate_markdown(self, results: Any) -> str:
+        """Generate Markdown report"""
+        lines = []
+        
+        # Header
+        lines.append("# PreMLCheck Analysis Report")
+        lines.append(f"\n**Generated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        lines.append("---\n")
+        
+        # Task Type
+        lines.append("## 📊 Task Type Detection")
+        lines.append(f"\n- **Task Type:** {results.task_type}")
+        lines.append(f"- **Confidence:** {results.task_confidence:.1%}\n")
+        
+        # Quality Score
+        lines.append("## 💯 Dataset Quality Assessment")
+        lines.append(f"\n**Health Score:** {results.quality_score:.1f}/100\n")
+        
+        if results.quality_details:
+            # Missing values
+            missing = results.quality_details.get('missing_values', {})
+            if missing.get('total_missing_ratio', 0) > 0:
+                lines.append("### Missing Values")
+                lines.append(f"- Total missing: {missing['total_missing_ratio']*100:.2f}%")
+                if missing.get('columns_with_missing'):
+                    lines.append(f"- Affected columns: {len(missing['columns_with_missing'])}\n")
+            
+            # Sample-feature ratio
+            ratio = results.quality_details.get('sample_feature_ratio', {})
+            lines.append("### Dataset Dimensions")
+            lines.append(f"- Samples: {ratio.get('n_samples', 'N/A')}")
+            lines.append(f"- Features: {ratio.get('n_features', 'N/A')}")
+            lines.append(f"- Ratio: {ratio.get('ratio', 0):.1f} samples per feature\n")
+        
+        # Overfitting Risk
+        lines.append("## ⚠️ Overfitting Risk Assessment")
+        lines.append(f"\n**Risk Level:** {results.overfitting_risk}\n")
+        
+        if results.overfitting_factors:
+            lines.append("### Risk Factors:")
+            for factor in results.overfitting_factors:
+                lines.append(f"\n**{factor['factor']}** (*{factor['severity']} severity*)")
+                lines.append(f"- {factor['description']}")
+        
+        # Model Recommendations
+        lines.append("\n## 🎯 Model Recommendations\n")
+        if results.model_recommendations:
+            for i, rec in enumerate(results.model_recommendations[:5], 1):
+                lines.append(f"\n### {i}. {rec.name}")
+                lines.append(f"- **Suitability Score:** {rec.score:.1f}/100")
+                lines.append(f"- **Reason:** {rec.reason}")
+                if rec.warnings:
+                    lines.append(f"- ⚠️ **Warnings:** {'; '.join(rec.warnings)}")
+        
+        # Performance Estimation
+        lines.append("\n## 📈 Expected Performance\n")
+        if results.performance_estimate:
+            perf = results.performance_estimate
+            lines.append(f"- **Metric:** {perf.get('metric', 'N/A')}")
+            lines.append(f"- **Estimated Score:** {perf.get('estimated_score', 0):.3f}")
+            lines.append(f"- **Range:** [{perf.get('lower_bound', 0):.3f}, {perf.get('upper_bound', 0):.3f}]")
+            lines.append(f"- **Confidence:** {perf.get('confidence_level', 'N/A')}")
+            lines.append(f"\n*{perf.get('description', '')}*\n")
+        
+        # Preprocessing Suggestions
+        lines.append("## 🔧 Preprocessing Recommendations\n")
+        if results.preprocessing_suggestions:
+            for sugg in results.preprocessing_suggestions:
+                lines.append(f"\n### {sugg.action} (*{sugg.priority} Priority*)")
+                lines.append(f"\n{sugg.description}\n")
+                if sugg.code_example:
+                    lines.append("**Example Code:**\n")
+                    lines.append("```python")
+                    lines.append(sugg.code_example)
+                    lines.append("```\n")
+        
+        lines.append("\n---\n")
+        lines.append("*Report generated by PreMLCheck*")
+        
+        return "\n".join(lines)
+    
+    def _generate_html(self, results: Any) -> str:
+        """Generate HTML report"""
+        # Simple HTML wrapper around markdown content
+        md_content = self._generate_markdown(results)
+        
+        html = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PreMLCheck Analysis Report</title>
+    <style>
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #333;
+        }}
+        h1 {{ color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }}
+        h2 {{ color: #34495e; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 15px; }}
+        h3 {{ color: #555; }}
+        code {{ background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }}
+        pre {{ background: #f4f4f4; padding: 15px; border-radius: 5px; overflow-x: auto; }}
+        .score {{ font-size: 2em; color: #27ae60; font-weight: bold; }}
+        .risk {{ padding: 10px; border-radius: 5px; margin: 10px 0; }}
+        .risk.low {{ background: #d5f4e6; border-left: 4px solid #27ae60; }}
+        .risk.medium {{ background: #fff3cd; border-left: 4px solid #ffc107; }}
+        .risk.high {{ background: #f8d7da; border-left: 4px solid #dc3545; }}
+    </style>
+</head>
+<body>
+    <pre style="white-space: pre-wrap; font-family: inherit;">
+{md_content}
+    </pre>
+</body>
+</html>"""
+        
+        return html
+    
+    def _generate_json(self, results: Any) -> str:
+        """Generate JSON report"""
+        report_dict = {
+            'generated_at': datetime.now().isoformat(),
+            'task_type': results.task_type,
+            'task_confidence': results.task_confidence,
+            'quality_score': results.quality_score,
+            'quality_details': results.quality_details,
+            'overfitting_risk': results.overfitting_risk,
+            'overfitting_factors': results.overfitting_factors,
+            'model_recommendations': [
+                {
+                    'name': rec.name,
+                    'score': rec.score,
+                    'reason': rec.reason,
+                    'warnings': rec.warnings
+                }
+                for rec in (results.model_recommendations or [])
+            ],
+            'performance_estimate': results.performance_estimate,
+            'preprocessing_suggestions': [
+                {
+                    'action': sugg.action,
+                    'priority': sugg.priority,
+                    'description': sugg.description,
+                    'code_example': sugg.code_example
+                }
+                for sugg in (results.preprocessing_suggestions or [])
+            ]
+        }
+        
+        return json.dumps(report_dict, indent=2)
