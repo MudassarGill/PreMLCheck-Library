@@ -33,7 +33,7 @@ class TaskDetector:
         
         # Check data type
         is_numeric = pd.api.types.is_numeric_dtype(y_clean)
-        is_categorical = pd.api.types.is_categorical_dtype(y_clean) or pd.api.types.is_object_dtype(y_clean)
+        is_categorical = isinstance(y_clean.dtype, pd.CategoricalDtype) or pd.api.types.is_object_dtype(y_clean)
         
         # Categorical or boolean types -> classification
         if is_categorical or pd.api.types.is_bool_dtype(y_clean):

@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.7"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Mudassar Hussain", email = "mudassarhussain6533@gmail.com"}
 ]
 keywords = [
     "machine-learning",
@@ -56,10 +56,10 @@ viz = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/PreMLCheck-Library"
-Documentation = "https://github.com/yourusername/PreMLCheck-Library/tree/main/docs"
-Repository = "https://github.com/yourusername/PreMLCheck-Library"
-"Bug Tracker" = "https://github.com/yourusername/PreMLCheck-Library/issues"
+Homepage = "https://github.com/MudassarGill/PreMLCheck-Library"
+Documentation = "https://github.com/MudassarGill/PreMLCheck-Library/tree/main/docs"
+Repository = "https://github.com/MudassarGill/PreMLCheck-Library"
+"Bug Tracker" = "https://github.com/MudassarGill/PreMLCheck-Library/issues"
 
 [project.scripts]
 premlcheck = "premlcheck.cli:main"

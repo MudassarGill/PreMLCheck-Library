@@ -6,6 +6,66 @@ PreMLCheck acts as your pre-training ML advisor, helping you understand your dat
 
 ---
 
+## 📁 Project Structure
+
+```
+PreMLCheck-Library/
+│
+├── premlcheck/                  # Main package
+│   ├── __init__.py              # Package initialization & public API
+│   ├── analyzer.py              # Main PreMLCheck orchestrator class
+│   ├── config.py                # Configuration defaults & constants
+│   ├── task_detector.py         # Module 1: Detect ML task type
+│   ├── quality_checker.py       # Module 2: Dataset quality assessment
+│   ├── overfitting_predictor.py # Module 3: Overfitting risk prediction
+│   ├── model_recommender.py     # Module 4: ML model recommendations
+│   ├── performance_estimator.py # Module 5: Performance estimation
+│   ├── preprocessing_advisor.py # Module 6: Preprocessing suggestions
+│   ├── report_generator.py      # Module 7: Report generation (MD/HTML/JSON)
+│   │
+│   └── utils/                   # Utility helpers
+│       ├── __init__.py          # Utils package exports
+│       ├── metrics.py           # Metric calculations & data statistics
+│       ├── validators.py        # Input validation functions
+│       └── visualizers.py       # Visualization utilities (optional)
+│
+├── tests/                       # Test suite
+│   ├── __init__.py
+│   ├── test_task_detector.py
+│   ├── test_quality_checker.py
+│   ├── test_overfitting_predictor.py
+│   ├── test_model_recommender.py
+│   ├── test_performance_estimator.py
+│   ├── test_preprocessing_advisor.py
+│   ├── test_report_generator.py
+│   └── test_integration.py      # End-to-end integration tests
+│
+├── examples/                    # Usage examples
+│   ├── basic_usage.py
+│   └── sample_datasets/
+│       ├── classification_sample.csv
+│       └── regression_sample.csv
+│
+├── docs/                        # Documentation
+│   ├── API.md                   # Full API reference
+│   ├── CHANGELOG.md
+│   └── CONTRIBUTING.md
+│
+├── setup.py                     # Package setup (setuptools)
+├── pyproject.toml               # PEP 517/518 build configuration
+├── requirements.txt             # Core dependencies
+├── requirements-dev.txt         # Development dependencies
+├── MANIFEST.in                  # Distribution manifest
+├── LICENSE                      # MIT License
+├── README.md                    # This file
+├── BUILD_AND_PUBLISH.md         # PyPI publishing guide
+├── PYPI_CHECKLIST.md            # Pre-publish checklist
+├── verify_package.py            # Package verification script
+└── .gitignore
+```
+
+---
+
 ## 🚀 Features
 
 ### ✔ 1. Detect ML Task Type
@@ -44,7 +104,7 @@ pip install premlcheck
 Or install from source:
 
 ```bash
-git clone https://github.com/yourusername/PreMLCheck-Library.git
+git clone https://github.com/MudassarGill/PreMLCheck-Library.git
 cd PreMLCheck-Library
 pip install -e .
 ```

@@ -51,7 +51,7 @@ class PerformanceEstimator:
         # Fill missing values with median/mode
         for col in X_processed.columns:
             if X_processed[col].dtype in [np.float64, np.int64]:
-                X_processed[col].fillna(X_processed[col].median(), inplace=True)
+                X_processed[col] = X_processed[col].fillna(X_processed[col].median())
             else:
                 # Encode categorical as numeric
                 X_processed[col] = pd.Categorical(X_processed[col]).codes

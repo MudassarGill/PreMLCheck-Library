@@ -75,7 +75,7 @@ class TestIntegration:
             self.analyzer.generate_report(results, temp_path, format='markdown')
             assert os.path.exists(temp_path)
             
-            with open(temp_path, 'r') as f:
+            with open(temp_path, 'r', encoding='utf-8') as f:
                 content = f.read()
                 assert 'PreMLCheck Analysis Report' in content
                 assert 'Task Type' in content
