@@ -43,27 +43,27 @@ print("\n" + "=" * 60)
 print("Detailed Results")
 print("=" * 60)
 
-print(f"\n📊 Task Type: {results.task_type}")
+print(f"\n Task Type: {results.task_type}")
 print(f"   Confidence: {results.task_confidence:.1%}")
 
-print(f"\n💯 Dataset Health Score: {results.quality_score:.1f}/100")
+print(f"\n Dataset Health Score: {results.quality_score:.1f}/100")
 
-print(f"\n⚠️ Overfitting Risk: {results.overfitting_risk}")
+print(f"\n Overfitting Risk: {results.overfitting_risk}")
 if results.overfitting_factors:
     print("   Risk Factors:")
     for factor in results.overfitting_factors:
         print(f"   - {factor['factor']}: {factor['description']}")
 
-print(f"\n🎯 Top Model Recommendations:")
+print(f"\n Top Model Recommendations:")
 for i, rec in enumerate(results.model_recommendations[:3], 1):
     print(f"   {i}. {rec.name} (Score: {rec.score:.1f}/100)")
     print(f"      {rec.reason}")
 
-print(f"\n📈 Performance Estimate:")
+print(f"\n Performance Estimate:")
 if results.performance_estimate:
     print(f"   {results.performance_estimate.get('description', 'N/A')}")
 
-print(f"\n🔧 Preprocessing Suggestions:")
+print(f"\n Preprocessing Suggestions:")
 for sugg in results.preprocessing_suggestions[:3]:
     print(f"   - [{sugg.priority}] {sugg.action}")
     print(f"     {sugg.description}")
