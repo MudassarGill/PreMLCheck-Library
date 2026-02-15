@@ -43,13 +43,37 @@ class AnalysisResults:
             summary.append(f"\n Overfitting Risk: {self.overfitting_risk}")
         
         if self.model_recommendations:
-            summary.append(f"\n Recommended Models: {len(self.model_recommendations)} suggestions")
+            summary.append(f"\n Recommended Models ({len(self.model_recommendations)} suggestions):")
+            summary.append("-" * 50)
+            for i, rec in enumerate(self.model_recommendations, 1):
+                summary.append(f"  {i}. {rec.name} (Score: {rec.score:.1f}/100)")
+                summary.append(f"     Reason: {rec.reason}")
+                if rec.warnings:
+                    summary.append(f"     ⚠ Warnings: {'; '.join(rec.warnings)}")
         
         if self.performance_estimate:
-            summary.append(f"\n Expected Performance: {self.performance_estimate}")
+            perf = self.performance_estimate
+            summary.append(f"\n Expected Performance:")
+            summary.append("-" * 50)
+            summary.append(f"  Metric: {perf.get('metric', 'N/A')}")
+            summary.append(f"  Estimated Score: {perf.get('estimated_score', 0):.3f}")
+            summary.append(f"  Range: [{perf.get('lower_bound', 0):.3f}, {perf.get('upper_bound', 0):.3f}]")
+            if perf.get('mean_absolute_error') is not None:
+                summary.append(f"  MAE: {perf.get('mean_absolute_error'):.4f}")
+            summary.append(f"  Confidence: {perf.get('confidence_level', 'N/A')}")
+            if perf.get('description'):
+                summary.append(f"  Description: {perf['description']}")
         
         if self.preprocessing_suggestions:
-            summary.append(f"\n Preprocessing Steps: {len(self.preprocessing_suggestions)} recommendations")
+            summary.append(f"\n Preprocessing Steps ({len(self.preprocessing_suggestions)} recommendations):")
+            summary.append("-" * 50)
+            for i, sugg in enumerate(self.preprocessing_suggestions, 1):
+                summary.append(f"  {i}. [{sugg.priority}] {sugg.action}")
+                summary.append(f"     {sugg.description}")
+                if sugg.code_example:
+                    summary.append(f"     Example Code:")
+                    for line in sugg.code_example.strip().split('\n'):
+                        summary.append(f"       {line}")
         
         summary.append("\n" + "=" * 60)
         return "\n".join(summary)
